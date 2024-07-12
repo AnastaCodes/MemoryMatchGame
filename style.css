@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+#game {
+    display: grid;
+    grid-template-columns: repeat(4, 100px);
+    grid-gap: 10px;
+    justify-content: center;
+    margin: 0 auto;
+}
+.card {
+    user-select: none;
+    width: 100px;
+    height: 100px;
+    background-color: #ccc;
+    color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: transform 0.5s;
+    transform: rotateY(180deg);
+}
+.card.flip {
+    transform: rotateY(0);
+    transition: 1s;
+    background-color: #ccc;
+    color: black;
+}
+.card-content {
+    position: absolute;
+    backface-visibility: hidden;
+}
+.card-back {
+    transform: rotateY(180deg);
+}
