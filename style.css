@@ -33,6 +33,9 @@ body {
     background-color: #ccc;
     color: black;
 }
+.card.match{
+    background-color: #b0ffd9; 
+}
 .card-content {
     position: absolute;
     backface-visibility: hidden;
