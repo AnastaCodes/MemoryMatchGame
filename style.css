@@ -1,23 +1,52 @@
+/* adlam-display-regular - latin */
+@font-face {
+    font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'ADLaM Display';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/adlam-display-v1-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  }
+
+@keyframes gradientAnimation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Kalnia Glaze';
+    font-weight: 700;
     text-align: center;
     background-color: #f0f0f0;
     margin: 0;
     padding: 20px;
+    background: linear-gradient(to right, #d1e4ff, #daffd2, #ffcaed);
+    background-size: 200% 100%;
+    animation: gradientAnimation 30s ease infinite;
+  }
+
+h1{
+    font-size: 3rem;
 }
-#game {
+  #game {
     display: grid;
     grid-template-columns: repeat(4, 100px);
     grid-gap: 10px;
     justify-content: center;
     margin: 0 auto;
-}
-.card {
+  }
+  
+  .card {
     user-select: none;
     width: 100px;
     height: 100px;
-    background-color: #ccc;
-    color: #ccc;
+    background-color: #0000001f;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -26,20 +55,64 @@ body {
     border-radius: 8px;
     transition: transform 0.5s;
     transform: rotateY(180deg);
-}
-.card.flip {
+    position: relative; 
+  }
+  .card img {
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: none; 
+    margin: auto;
+  }
+  
+  .card.flip img {
+    display: block; 
+  }
+  
+  .card.flip {
     transform: rotateY(0);
     transition: 1s;
-    background-color: #ccc;
+    background-color: #e36a3aba;
     color: black;
-}
-.card.match{
-    background-color: #b0ffd9; 
-}
-.card-content {
+  }
+  
+  .card.match {
+    background-color: #3ae392;
+  }
+  
+  .card-content {
     position: absolute;
     backface-visibility: hidden;
-}
-.card-back {
+  }
+  
+  .card-back {
     transform: rotateY(180deg);
-}
+  }
+  
+.stats-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+  
+  .stats {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .stats button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }

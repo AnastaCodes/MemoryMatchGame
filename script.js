@@ -1,33 +1,54 @@
-const symbols = ["A", "B", "C", "D", "E", "F", "G", "H"]; //массив символов
-const cards = [...symbols, ...symbols]; //карточки с двойным набором символов
-let firstCard = null; //первая открытая карта
-let secondCard = null; //вторая открытая карта
+const images = [
+  "img1.png",
+  "img2.png",
+  "img3.png",
+  "img4.png",
+  "img5.png",
+  "img6.png",
+  "img7.png",
+  "img8.png",
+]; 
+const cards = [...images, ...images]; // cards with double set of images
+const gameBoard = document.getElementById("game");
+let firstCard = null; // first flipped card
+let secondCard = null; // second flipped card
+let matches = 0; // number of matched pairs
 let lockBoard = false;
-let matches = 0; //кол-во найденных пар
+let clicks = 0;
+let startTime;
 
-//перемешивание карточек
+// shuffle cards
 function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
 }
-
 shuffle(cards);
 
-//создание карточек
-const gameBoard = document.getElementById("game");
+// create cards
+function createCards() {
+  cards.forEach((imageSrc) => {
+    let card = document.createElement("div");
+    let img = document.createElement("img");
+    img.src = `./img/${imageSrc}`;
+    card.appendChild(img);
+    card.classList.add("card");
+    gameBoard.appendChild(card);
+    card.addEventListener("click", flipCard);
+  });
+}
 
-cards.forEach((symbol) => {
-  let card = document.createElement("div");
-  let cardContent = document.createElement("div");
-  cardContent.innerText = symbol;
-  card.classList.add("card");
-  card.appendChild(cardContent);
-  gameBoard.appendChild(card);
-  card.addEventListener("click", flipCard);
-});
+createCards();
 
-//поворот карточки
+// start timer when the first card is clicked
+function startTimer() {
+  startTime = new Date();
+}
+
+// flip card
 function flipCard(event) {
-  if (lockBoard) return; //если блокировка на true, то ничего не делать
+  if (lockBoard) return; // if lockBoard is true, do nothing
+  if (!startTime) startTimer(); // start timer
+
+  clicks++; // click counter
 
   let clickedCard;
 
@@ -37,7 +58,7 @@ function flipCard(event) {
     clickedCard = event.target.parentNode;
   }
 
-  if (clickedCard === firstCard) return; // двойное нажатие на одну и ту же карту
+  if (clickedCard === firstCard) return; // double-click on the same card
 
   clickedCard.classList.add("flip");
 
@@ -51,9 +72,11 @@ function flipCard(event) {
   }
 }
 
-//проверка на совпадение карточек
+// check for matching cards
 function checkForMatch() {
-  if (firstCard.innerText === secondCard.innerText) {
+  if (
+    firstCard.querySelector("img").src === secondCard.querySelector("img").src
+  ) {
     firstCard.classList.add("match");
     secondCard.classList.add("match");
     disableCards();
@@ -62,28 +85,67 @@ function checkForMatch() {
   }
 }
 
-//дезактивировать карточки (при совпадении). Конец игры и поздравление, если все карточки найдены
+// disable cards if they match. End game and congratulations if all cards are found
 function disableCards() {
   firstCard.removeEventListener("click", flipCard);
   secondCard.removeEventListener("click", flipCard);
   matches += 1;
   if (matches === 8) {
-    alert("Ты выиграл! Молодец!");
+    showStats();
   }
   resetBoard();
 }
 
-//вернуть карточки обратно (при несовпадении) - ГОТОВО!
+// unflip cards if they don't match
 function unflipCards() {
   lockBoard = true;
   setTimeout(() => {
     firstCard.classList.remove("flip");
     secondCard.classList.remove("flip");
     resetBoard();
-  }, 1000);
+  }, 800);
 }
 
-//разблокировать поле (при возврате карт поле блокируется, чтобы предотвратить нажатие на другие карты) - ГОТОВО!
+// reset the board state
 function resetBoard() {
   [firstCard, secondCard, lockBoard] = [null, null, false];
+}
+
+//at the end of the game
+function showStats() {
+  const endTime = new Date();
+  const timeTaken = Math.round((endTime - startTime) / 1000); // time in seconds
+  const statsContainer = document.createElement("div");
+  statsContainer.classList.add("stats-container");
+  statsContainer.innerHTML = `
+    <div class="stats">
+      <p>Time Taken: ${timeTaken} seconds</p>
+      <p>Clicks: ${clicks}</p>
+      <button id="ok">OK</button>
+      <button id="restart">Restart</button>
+    </div>
+  `;
+  document.body.appendChild(statsContainer);
+
+  document.getElementById("ok").addEventListener("click", () => {
+    statsContainer.remove();
+  });
+
+  document.getElementById("restart").addEventListener("click", () => {
+    statsContainer.remove();
+    resetGame();
+  });
+}
+
+// reset the game
+function resetGame() {
+  firstCard = null;
+  secondCard = null;
+  lockBoard = false;
+  matches = 0;
+  clicks = 0;
+  startTime = null;
+  shuffle(cards);
+  gameBoard.innerHTML = "";
+  createCards();
 }
