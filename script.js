@@ -16,6 +16,7 @@ let matches = 0; // number of matched pairs
 let lockBoard = false;
 let clicks = 0;
 let startTime;
+let timerInterval;
 
 // shuffle cards
 function shuffle(array) {
@@ -41,6 +42,14 @@ createCards();
 // start timer when the first card is clicked
 function startTimer() {
   startTime = new Date();
+  timerInterval = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+  const now = new Date();
+  const elapsed = Math.floor((now - startTime) / 1000);
+  const secondText = elapsed === 1 ? "second" : "seconds";
+  document.getElementById("timer").textContent = `Time: ${elapsed} ${secondText}`;
 }
 
 // flip card
@@ -135,10 +144,12 @@ function showStats() {
     statsContainer.remove();
     resetGame();
   });
+  document.getElementById("timer").textContent = `Time: 0 seconds`;
 }
 
 // reset the game
 function resetGame() {
+  clearInterval(timerInterval);
   firstCard = null;
   secondCard = null;
   lockBoard = false;
